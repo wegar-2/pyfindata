@@ -46,7 +46,6 @@ class StooqCsvExtractor:
                 data = data[["Close"]]
                 data = data.rename(columns={"Close": file})
                 datas.append(data)
-
         data = reduce(
             lambda left, right: pd.merge(
                 left=left, right=right, left_index=True, right_index=True,
