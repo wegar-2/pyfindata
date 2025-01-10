@@ -5,6 +5,8 @@ from typing import Final, Optional
 import pandas as pd
 import pandas_datareader.data as web
 
+__all__ = ["FredDBExtractor"]
+
 
 class FredDBExtractor:
 
@@ -30,13 +32,3 @@ class FredDBExtractor:
             self._end
         )
         return data
-
-
-if __name__ == "__main__":
-    res = FredDBExtractor(
-        fred_ts_id="CPIAUCSL",
-        start=date(2000, 1, 1),
-        end=date(2024, 12, 1)
-    ).extract()
-
-    print(res)

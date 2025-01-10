@@ -8,6 +8,8 @@ import pandas as pd
 Market: TypeAlias = Literal["primary", "secondary"]
 PriceType: TypeAlias = Literal["transactional", "offer"]
 
+__all__ = ["NBPRealEstatePricesExtractor"]
+
 
 class NBPRealEstatePricesExtractor:
 
