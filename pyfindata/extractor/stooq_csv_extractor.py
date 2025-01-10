@@ -45,7 +45,7 @@ class StooqCsvExtractor:
             data: pd.DataFrame = pd.DataFrame(StooqDataModel.validate(data))
             data = data.set_index("Date")
             data = data[["Close"]]
-            data = data.rename(columns={"Close": csv_config.ts_config.ticker})
+            data = data.rename(columns={"Close": "close"})
             ts_datas.append(
                 TSData(data=data, ts_config=csv_config.ts_config)
             )

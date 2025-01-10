@@ -57,7 +57,7 @@ class GetMergedStooqDataPipeline:
         ]
         for ccy in self._unique_data_ccys:
             currency_pair: str = f"{ccy.value}_{self._target_ccy.value}"
-            logger.info(f"Performing conversions from: {ccy.value}")
+            logger.info(f"Performing conversions from: {ccy}")
             ccy_ts_data = [
                 ts_data
                 for ts_data in ts_datas
