@@ -1,16 +1,42 @@
+from datetime import date
+import os
 from typing import Final, Optional
 
 import pandas as pd
+import pandas_datareader.data as web
 
 
 class FredDBExtractor:
 
-    def __init__(self, api_key: Optional[str] = None):
-        pass
+    def __init__(
+            self,
+            fred_ts_id: str,
+            start: date,
+            end: date,
+            api_key: Optional[str] = None
+    ):
+        if api_key is None:
+            api_key = os.getenv("FRED_API_KEY")
+        self._api_key: str = api_key
+        self._fred_ts_id: [str] = fred_ts_id
+        self._start: Final[date] = start
+        self._end: Final[date] = end
 
     def extract(self) -> pd.DataFrame:
-        pass
+        data = web.DataReader(
+            [self._fred_ts_id],
+            'fred',
+            self._start,
+            self._end
+        )
+        return data
 
 
 if __name__ == "__main__":
-    pass
+    res = FredDBExtractor(
+        fred_ts_id="CPIAUCSL",
+        start=date(2000, 1, 1),
+        end=date(2024, 12, 1)
+    ).extract()
+
+    print(res)
