@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, field_validator
 from pyfindata.common.ts_config import TSConfig
 
 
-class StooqCsvFileConfig(BaseModel):
+class CsvDataFileConfig(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     ts_config: TSConfig

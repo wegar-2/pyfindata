@@ -1,26 +1,30 @@
+import logging
 from typing import Union
 
-from loguru import logger
 import pandas as pd
 
 from pyfindata.common.ts_data import TSData
-from pyfindata.extractor.configs import StooqCsvFileConfig
+from pyfindata.extractor.configs import CsvDataFileConfig
 from pyfindata.extractor.constants import StooqDataModel
+
+logger = logging.getLogger(__name__)
+
+__all__ = ["StooqCsvExtractor"]
 
 
 class StooqCsvExtractor:
 
     def __init__(
             self,
-            csv_configs: Union[StooqCsvFileConfig, list[StooqCsvFileConfig]],
+            csv_configs: Union[CsvDataFileConfig, list[CsvDataFileConfig]],
     ):
-        if isinstance(csv_configs, StooqCsvFileConfig):
-            csv_configs = [StooqCsvFileConfig]
+        if isinstance(csv_configs, CsvDataFileConfig):
+            csv_configs = [CsvDataFileConfig]
         self._validate_csv_configs(csv_configs=csv_configs)
-        self._csv_configs: list[StooqCsvFileConfig] = csv_configs
+        self._csv_configs: list[CsvDataFileConfig] = csv_configs
 
     @staticmethod
-    def _validate_csv_configs(csv_configs: list[StooqCsvFileConfig]):
+    def _validate_csv_configs(csv_configs: list[CsvDataFileConfig]):
         if len(missing_files := [
             cfg.filepath
             for cfg in csv_configs

@@ -5,3 +5,4 @@ class Ccy(Enum):
     USD = "usd"
     EUR = "eur"
     PLN = "pln"
+    NONE = None
