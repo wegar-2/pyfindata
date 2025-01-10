@@ -33,10 +33,3 @@ class GUSMonthlyMacroIndicatorsExtractor:
         cpi_data = cpi_data.loc[2:, :].reset_index(drop=True)
         cpi_data = cpi_data.loc[:data_index.index[-1], :]
         return pd.concat([data_index, cpi_data], axis=1)
-
-
-if __name__ == "__main__":
-
-    res = GUSMonthlyMacroIndicatorsExtractor().extract()
-
-    print(res)
