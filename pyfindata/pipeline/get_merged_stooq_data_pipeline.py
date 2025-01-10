@@ -56,7 +56,7 @@ class GetMergedStooqDataPipeline:
                 ts_data.ts_config.ccy == self._target_ccy)
         ]
         for ccy in self._unique_data_ccys:
-            currency_pair: str = f"{ccy.value}_{self._target_ccy.value}"
+            currency_pair: str = f"{ccy.value}{self._target_ccy.value}"
             logger.info(f"Performing conversions from: {ccy}")
             ccy_ts_data = [
                 ts_data
@@ -84,6 +84,14 @@ class GetMergedStooqDataPipeline:
                     )
 
         logger.info("Joining the converted data")
+        datas_to_merge = []
+        for ts_data in converted_ts_datas:
+            data_piece = ts_data.data.copy(deep=True)
+            data_piece.columns = pd.MultiIndex.from_arrays([
+                [f"{ts_data.ts_config.ticker}"],
+                [f"{ts_data.ts_config.ccy.value}"]
+            ])
+            datas_to_merge.append(data_piece)
         data = reduce(
             lambda left, right: pd.merge(
                 left=left,
@@ -92,7 +100,7 @@ class GetMergedStooqDataPipeline:
                 right_index=True,
                 how="outer"
             ),
-            [ts_data.data for ts_data in converted_ts_datas]
+            datas_to_merge
         )
         return data.ffill(axis=0).bfill(axis=0)
 
@@ -102,25 +110,28 @@ if __name__ == "__main__":
     from pyfindata.common.freq import Freq
     from pyfindata.common.constants import DEFAULT_DATA_PATH
 
-    tickers: Final[list[str]] = [
-        "apple_usd", "btc_pln", "dax_eur", "eth_usd", "eur_pln",
-        "nasdaq_usd", "nvidia_usd", "sp500_usd", "tesla_usd",
-        "tsmc_usd", "usd_pln", "xau_pln"
-    ]
-
     ts_configs: list[TSConfig] = [
-        TSConfig(
-            ticker=ticker,
-            freq=Freq.DAILY,
-            ccy=Ccy(ticker[-3:])
-        )
-        for ticker in tickers
+        TSConfig(ticker="apple", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="btc", ccy=Ccy.PLN, freq=Freq.DAILY),
+        TSConfig(ticker="dax", ccy=Ccy.EUR, freq=Freq.DAILY),
+        TSConfig(ticker="eth", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="eurpln", ccy=Ccy.PLN, freq=Freq.DAILY),
+        TSConfig(ticker="nasdaq", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="nvidia", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="sp500", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="tesla", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="tsmc", ccy=Ccy.USD, freq=Freq.DAILY),
+        TSConfig(ticker="usdpln", ccy=Ccy.PLN, freq=Freq.DAILY),
+        TSConfig(ticker="xaupln", ccy=Ccy.PLN, freq=Freq.DAILY),
     ]
 
     csv_configs: list[CsvDataFileConfig] = [
         CsvDataFileConfig(
             ts_config=ts_config,
-            filepath=DEFAULT_DATA_PATH / f"{ts_config.ticker}.csv"
+            filepath=(
+                    DEFAULT_DATA_PATH /
+                    f"{ts_config.ticker}_{ts_config.ccy.value}.csv"
+            )
         )
         for ts_config in ts_configs
     ]
