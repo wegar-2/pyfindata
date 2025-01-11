@@ -2,3 +2,4 @@
 .venv
 
 sandbox.py
+**/__pycache__/

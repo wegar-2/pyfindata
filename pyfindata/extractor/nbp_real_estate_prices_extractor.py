@@ -1,7 +1,7 @@
 from typing import Final, Literal, TypeAlias
 
 from unidecode import unidecode
-from pyfindata.common.common import convert_roman_month_date
+from pyfindata.common.common import convert_roman_quarter_date
 
 import pandas as pd
 
@@ -46,7 +46,7 @@ class NBPRealEstatePricesExtractor:
         )))
         data = data.loc[~data["quarter"].isna(), :]
         data["quarter"] = [
-            convert_roman_month_date(x=x) for x in data["quarter"]
+            convert_roman_quarter_date(x=x) for x in data["quarter"]
         ]
         data = data.set_index("quarter")
         data.columns = pd.MultiIndex.from_product([

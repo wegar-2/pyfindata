@@ -1,12 +1,23 @@
 from datetime import date
 
 import pandas as pd
-from pyfindata.common.constants import ROMAN_MONTHS_MAP
+from pyfindata.common.constants import (
+    ROMAN_MONTHS_MAP, ROMAN_QUARTER_TO_MONTH_MAP
+)
 
 
 def convert_roman_month_date(x: str) -> date:
     roman_month, year_ = x.split(" ")
     return date(year=int(year_), month=ROMAN_MONTHS_MAP[roman_month], day=1)
+
+
+def convert_roman_quarter_date(x: str) -> date:
+    roman_quarter, year_ = x.split(" ")
+    return date(
+        year=int(year_),
+        month=ROMAN_QUARTER_TO_MONTH_MAP[roman_quarter],
+        day=1
+    )
 
 
 def to_index_at(data: pd.DataFrame, index_base_date: date) -> pd.DataFrame:
